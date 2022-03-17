@@ -1,5 +1,6 @@
 // import preact
 import { h, render, Component } from 'preact';
+import { useState } from 'preact';
 // import stylesheets for ipad & button
 import style from './style';
 import style_iphone from '../button/style_iphone';
@@ -17,13 +18,14 @@ export default class Iphone extends Component {
 		// temperature state
 		this.state.temp = "";
 		// button display state
-		this.setState({ display: true });
+		this.setState({ time : new Date().getHours() });
+		
 	}
 
 	// a call to fetch weather data via wunderground
-	fetchWeatherData = () => {
+	fetchWeatherData = (location) => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=cf17e23b1d108b29a4d738d2084baf5";
+		var url = `http://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&APPID=1e5e1a291b2a57ed2cc99894fa240567`;
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -33,11 +35,24 @@ export default class Iphone extends Component {
 		// once the data grabbed, hide the button
 		this.setState({ display: false });
 	}
-
+	//forecast = ()
+	
 	// the main render method for the iphone component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
+		const getinput = (event)=> {
+			const loc = event.target.value;
+			this.fetchWeatherData(loc);
+			console.log(loc);
+		};
+		const uptime = () =>{
+			this.setState({ time : this.state.time + 1});
+		}
+		const downtime = () =>{
+			
+			this.setState({ time : this.state.time - 1});
+		}
 		
 		// display all weather data
 		return (
@@ -48,8 +63,19 @@ export default class Iphone extends Component {
 					<span class={ tempStyles }>{ this.state.temp }</span>
 				</div>
 				<div class={ style.details }></div>
+				<div class= "search-box">
+					<input type="text" 
+						class="search"
+						placeholder="Search Location"
+						onChange = {getinput}/>
+				</div>
+				<div>
+					<button type="button" onClick={uptime}><i class="fa-solid fa-angle-up"></i></button>
+					<p class = "time-name">{this.state.time}</p>
+					<button type="button" onClick={downtime}><i class="fa-solid fa-angle-down"></i></button>
+				</div>
 				<div class= { style_iphone.container }> 
-					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchWeatherData }/ > : null }
+					
 				</div>
 			</div>
 		);
@@ -59,12 +85,14 @@ export default class Iphone extends Component {
 		var location = parsed_json['name'];
 		var temp_c = parsed_json['main']['temp'];
 		var conditions = parsed_json['weather']['0']['description'];
-
+		
+		console.log(parsed_json);
 		// set states for fields so they could be rendered later on
 		this.setState({
 			locate: location,
 			temp: temp_c,
-			cond : conditions
+			cond : conditions,
+			time : new Date().getHours()
 		});      
 	}
 }
