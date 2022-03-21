@@ -52,12 +52,12 @@ export default class Iphone extends Component {
 		var datelong = String(this.state.year) + '-' + String(this.state.month + 1) + '-' + String(this.state.day) + ' ' +  String(this.state.time) + ':00:00';
 		
 		var d = new Date(datelong);
+		
 		var num = (d/1000);
 		var count = Object.keys(hourly).length;
 		
 		for(let i=0; i<count; i++){
 			if(hourly[i]['dt'] == num){
-				
 				var temp_c = hourly[i]['temp'];
 				var conditions = hourly[i]['weather'][0]['description'];
 				var idTaken = hourly[i]['weather'][0]['id'];
@@ -187,7 +187,8 @@ export default class Iphone extends Component {
 
 		
 		const forwardDate = () =>{
-			if(this.state.upcount<2){
+			console.log(this.state.upcount);
+			if(this.state.upcount<1){
 				this.setState({ day : this.state.day + 1 });
 				this.setState({ upcount : this.state.upcount + 1 });
 				this.setState({ uptimer : this.state.uptimer + 24 });
@@ -200,10 +201,12 @@ export default class Iphone extends Component {
 			if(this.state.upcount>1){
 				this.setState({ day : this.state.day - 1 });
 				this.setState({ upcount : this.state.upcount - 1 });
+				this.setState({ uptimer : this.state.uptimer - 24 });
 				this.forecast();
 			}else if(this.state.upcount == 1){
 				this.setState({ day : this.state.day - 1 });
 				this.setState({ upcount : this.state.upcount - 1 });
+				this.setState({ uptimer : this.state.uptimer - 24 });
 				this.fetchWeatherData(this.state.locate);
 			}
 		}
@@ -225,9 +228,11 @@ export default class Iphone extends Component {
 						onChange = {getinput}/>
 				</div>
 				<div>
-					{this.state.display ?<img type="button" onClick={forwardDate} src='../../assets/arrows/up.png' class={ style.forwardDate } width={53} height={20}></img>: null}
-					{this.state.display ?<img type = "button" class = {style.weatherImage} src={this.state.link} width={150} height={150}></img> : null}
+					
 					{this.state.display ?<img type="button" onClick={bacwardDate} src='../../assets/arrows/up.png' class={ style.bacwardDate } width={53} height={20}></img>: null}
+					{this.state.display ?<img type = "button" class = {style.weatherImage} src={this.state.link} width={150} height={150}></img> : null}
+					{this.state.display ?<img type="button" onClick={forwardDate} src='../../assets/arrows/up.png' class={ style.forwardDate } width={53} height={20}></img>: null}
+					
 				</div>
 				<div class={ style.timesetter}>
 					{this.state.display ?<img type="button" onClick={uptime} src='../../assets/arrows/up.png' class={ style.uparrow } width={53} height={20}></img>: null}
