@@ -13,44 +13,7 @@ export default class App extends Component {
 		childVis: false,
 		startupComplete: false,
 		locate: "",
-	};
-
-	fetchCurrentLocation = () => {
-		const successCallback = (position) => {
-			var crd = position.coords;
-			var lon = crd.longitude;
-			var lat = crd.latitude;
-
-			var url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&APPID=${this.state.API_Key}`;
-			$.ajax({
-				url: url,
-				dataType: "jsonp",
-				success: this.parseResponse,
-				error: function (req, err) {
-					console.log("API call failed " + err);
-				},
-			});
-			// once the data grabbed, hide the button
-			this.setState({ display: false });
-		};
-		const errorCallback = (error) => {
-			console.error(error);
-		};
-		const location = navigator.geolocation.getCurrentPosition(
-			successCallback,
-			errorCallback
-		);
-	};
-
-	parseResponse = (parsed_json) => {
-		var city = parsed_json["name"];
-		console.log(parsed_json);
-		let input = document.getElementById("loc_input");
-		input.value = city;
-		this.setState({
-			locate: city,
-		});
-		console.log("APp:" + this.state.locate);
+		dayChange: 0,
 	};
 	//var App = React.createClass({
 
@@ -93,6 +56,7 @@ export default class App extends Component {
 							locate={this.state.locate}
 							toggleScreen={this.toggleChild}
 							API_Key={this.state.API_Key}
+							changeDay={this.state.dayChange}
 						/>
 					) : (
 						<Iphone
@@ -109,6 +73,11 @@ export default class App extends Component {
 							updateLocation={(location) => {
 								this.setState({
 									locate: location,
+								});
+							}}
+							DTUpdate={(change) => {
+								this.setState({
+									dayChange: change,
 								});
 							}}
 						/>
