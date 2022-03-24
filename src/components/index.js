@@ -85,10 +85,23 @@ export default class Iphone extends Component {
 
 	voice = () => {
 		let msg = new SpeechSynthesisUtterance();
-		msg.rate=0.75;
-		msg.text = "Current weather in" + "!" + this.props.locate + "!" + "is" + "!" + this.state.cond + "!" + " with a temperature of" + "!" + Math.floor(this.state.temp) + "degree celcius";
+		msg.rate = 0.75;
+		msg.text =
+			"Current weather in" +
+			"!" +
+			this.props.locate +
+			"!" +
+			"is" +
+			"!" +
+			this.state.cond +
+			"!" +
+			" with a temperature of" +
+			"!" +
+			Math.floor(this.state.temp) +
+			"degree celcius";
 		speechSynthesis.speak(msg);
-    }
+	};
+
 	iconrec = () => {
 		var nine = [520, 521, 522, 531];
 		var ten = [500, 501, 502, 503, 504];
@@ -209,6 +222,7 @@ export default class Iphone extends Component {
 				this.setState({ day: this.state.day + 1 });
 				this.setState({ upcount: this.state.upcount + 1 });
 				this.setState({ uptimer: this.state.uptimer + 24 });
+				this.props.DTUpdate(1);
 				this.forecast();
 			}
 		};
@@ -218,11 +232,13 @@ export default class Iphone extends Component {
 				this.setState({ day: this.state.day - 1 });
 				this.setState({ upcount: this.state.upcount - 1 });
 				this.setState({ uptimer: this.state.uptimer - 24 });
+				this.props.DTUpdate(0);
 				this.forecast();
 			} else if (this.state.upcount == 1) {
 				this.setState({ day: this.state.day - 1 });
 				this.setState({ upcount: this.state.upcount - 1 });
 				this.setState({ uptimer: this.state.uptimer - 24 });
+				this.props.DTUpdate(0);
 				this.fetchWeatherData(this.props.locate);
 			}
 		};
@@ -305,31 +321,31 @@ export default class Iphone extends Component {
 				<div>
 					{this.state.display ? (
 						<img
-							type = "button"
+							type="button"
 							onClick={this.voice}
 							class={style.sound}
 							width={55}
 							height={55}
 						></img>
-					):null}
+					) : null}
 				</div>
 				<div>
 					{this.state.display ? (
 						<img
-							type = "button"
+							type="button"
 							class={style.magnify}
 							width={25}
 							height={25}
 						></img>
-						):null}
+					) : null}
 					{this.state.display ? (
 						<img
-							type = "button"
+							type="button"
 							class={style.minimise}
 							width={25}
 							height={25}
 						></img>
-						):null}
+					) : null}
 				</div>
 			</div>
 		);
@@ -355,13 +371,13 @@ export default class Iphone extends Component {
 			month: new Date().getMonth(),
 			year: new Date().getFullYear(),
 		});
-		console.log(this.state.temp);
 		this.iconrec();
 	};
-	componentDidMount = () =>{
-		if(this.props.locate){
+
+	componentDidMount() {
+		if (this.props.locate) {
+			this.props.DTUpdate(0);
 			this.fetchWeatherData(this.props.locate);
 		}
 	}
-
 }
