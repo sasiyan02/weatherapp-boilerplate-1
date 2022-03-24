@@ -115,36 +115,41 @@ export default class Iphone extends Component {
 			this.setState({ link: "http://openweathermap.org/img/wn/09d@2x.png" });
 		} else if (fifty.includes(this.state.id)) {
 			this.setState({ link: "http://openweathermap.org/img/wn/50d@2x.png" });
-		} else if (ten.includes(this.state.cond)) {
-			this.setState({ link: "http://openweathermap.org/img/wn/10d@2x.png" });
+		} else if (ten.includes(this.state.id)) {
+			if(this.state.time > 18 || this.state.time < 6){
+				this.setState({ link: "http://openweathermap.org/img/wn/10n@2x.png" });
+			}else{
+				this.setState({ link: "http://openweathermap.org/img/wn/10d@2x.png" });
+			}
+			
 		} else if (
 			this.state.main == "Snow" ||
 			this.state.cond == "freezing rain"
 		) {
 			this.setState({ link: "http://openweathermap.org/img/wn/13d@2x.png" });
 		} else if (this.state.id == 800) {
-			if (this.state.time > 18) {
+			if (this.state.time > 18 || this.state.time < 6) {
 				this.setState({ link: "http://openweathermap.org/img/wn/01n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/01d@2x.png" });
 			}
-			return link;
+			
 		} else if (this.state.id == 801) {
-			if (this.state.time > 18) {
+			if (this.state.time > 18 || this.state.time < 6) {
 				this.setState({ link: "http://openweathermap.org/img/wn/02n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/02d@2x.png" });
 			}
-			return link;
+			
 		} else if (this.state.id == 802) {
-			if (this.state.time > 18) {
+			if (this.state.time > 18 || this.state.time < 6) {
 				this.setState({ link: "http://openweathermap.org/img/wn/03n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/03d@2x.png" });
 			}
-			return link;
+			
 		} else if (this.state.id == 803 || this.state.id == 804) {
-			if (this.state.time > 18) {
+			if (this.state.time > 18 || this.state.time < 6) {
 				this.setState({ link: "http://openweathermap.org/img/wn/04n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/04d@2x.png" });
@@ -406,8 +411,10 @@ export default class Iphone extends Component {
 			day: new Date(date).getDate(),
 			month: new Date(date).getMonth(),
 			year: new Date(date).getFullYear(),
+			uptimer : 0,
+			upcount : 0
 		});
-
+		console.log(this.state.id);
 		this.props.DTUpdate("reset");
 
 		console.log(
