@@ -85,8 +85,6 @@ export default class ExpIphone extends Component {
 		var lon = parsed_json["coord"]["lon"];
 		var lat = parsed_json["coord"]["lat"];
 
-		console.log(parsed_json);
-
 		this.setState({
 			locate: location,
 			lon: lon,
@@ -100,24 +98,10 @@ export default class ExpIphone extends Component {
 		let daily = parsed_json["daily"];
 		let count = daily.length;
 		console.log(daily);
-
-		var day = new Date().getDate();
-		var month = new Date().getMonth();
-		var year = new Date().getFullYear();
-
-		var datelong =
-			String(year) +
-			"-" +
-			String(month + 1) +
-			"-" +
-			String(day + this.props.changeDay) +
-			" 12:00:00";
-
-		var d = new Date(datelong);
-		var num = d / 1000;
+		console.log("The dt: " + this.props.dt);
 
 		for (let i = 0; i < count; i++) {
-			if (daily[i]["dt"] == num) {
+			if (daily[i]["dt"] == this.props.dt) {
 				var temp_c = daily[i]["temp"]["day"];
 				var temp_min = daily[i]["temp"]["min"];
 				var temp_max = daily[i]["temp"]["max"];
@@ -130,8 +114,6 @@ export default class ExpIphone extends Component {
 		}
 
 		let w_direction = this.fetchCompass(w_deg);
-
-		console.log(parsed_json);
 		// set states for fields so they could be rendered later on
 		this.setState({
 			temp: temp_c.toFixed(),
