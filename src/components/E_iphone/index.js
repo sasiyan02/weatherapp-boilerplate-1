@@ -60,7 +60,7 @@ export default class ExpIphone extends Component {
 				<div class={style.header}>
 					<div class={style.city}>{this.props.locate}</div>
 					<span class={tempStyles} onClick={this.props.toggleScreen}>
-						{this.state.temp}
+						Avg: {this.state.temp}
 					</span>
 					<div style="margin-bottom: 50%">
 						<p class={style.degSign}>
@@ -96,22 +96,18 @@ export default class ExpIphone extends Component {
 
 	parseResponse = (parsed_json) => {
 		let daily = parsed_json["daily"];
-		let count = daily.length;
 		console.log(daily);
-		console.log("The dt: " + this.props.dt);
 
-		for (let i = 0; i < count; i++) {
-			if (daily[i]["dt"] == this.props.dt) {
-				var temp_c = daily[i]["temp"]["day"];
-				var temp_min = daily[i]["temp"]["min"];
-				var temp_max = daily[i]["temp"]["max"];
-				var pressure = daily[i]["pressure"];
-				var humidity = daily[i]["humidity"];
-				var c_coverage = daily[i]["clouds"];
-				var w_speed = daily[i]["wind_speed"];
-				var w_deg = daily[i]["wind_deg"];
-			}
-		}
+		var i = this.props.day;
+
+		var temp_c = daily[i]["temp"]["day"];
+		var temp_min = daily[i]["temp"]["min"];
+		var temp_max = daily[i]["temp"]["max"];
+		var pressure = daily[i]["pressure"];
+		var humidity = daily[i]["humidity"];
+		var c_coverage = daily[i]["clouds"];
+		var w_speed = daily[i]["wind_speed"];
+		var w_deg = daily[i]["wind_deg"];
 
 		let w_direction = this.fetchCompass(w_deg);
 		// set states for fields so they could be rendered later on
