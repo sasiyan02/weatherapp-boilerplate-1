@@ -29,6 +29,7 @@ export default class Iphone extends Component {
 		this.state.longitude = 0;
 		this.state.main = "";
 		this.state.link = "";
+		this.state.timezone = 0;
 	}
 
 	// a call to fetch weather data via wunderground
@@ -82,6 +83,10 @@ export default class Iphone extends Component {
 			}
 		}
 	};
+
+	calctime = () =>{
+
+	}
 
 	voice = () => {
 		let msg = new SpeechSynthesisUtterance();
@@ -200,7 +205,7 @@ export default class Iphone extends Component {
 			if (this.state.uptimer == 1) {
 				this.setState({ time: this.state.time - 1 });
 				this.setState({ uptimer: this.state.uptimer - 1 });
-				this.fetchWeatherData(this.state.locate);
+				this.fetchWeatherData(this.props.locate);
 			} else if (this.state.uptimer > 0) {
 				if (this.state.time == 0) {
 					this.setState({ day: this.state.day - 1 });
@@ -357,20 +362,26 @@ export default class Iphone extends Component {
 		var conditions = parsed_json["weather"]["0"]["description"];
 		var idTaken = parsed_json["weather"]["0"]["id"];
 		var main_weath = parsed_json["weather"]["0"]["main"];
-
+		var timez = parsed_json["timezone"];
+		
+		console.log(unix);
 		this.props.updateLocation(location);
-
-		// set states for fields so they could be rendered later on
+		console.log(parsed_json);
+		var unix = Math.round(+new Date()/1000);
+		console.log(unix);
+		var date = new Date((unix+timez)*1000);
+		
 		this.setState({
 			temp: temp_c.toFixed(),
 			cond: conditions,
 			id: idTaken,
 			main: main_weath,
-			time: new Date().getHours(),
-			day: new Date().getDate(),
-			month: new Date().getMonth(),
-			year: new Date().getFullYear(),
+			time: new Date(date).getHours(),
+			day: new Date(date).getDate(),
+			month: new Date(date).getMonth(),
+			year: new Date(date).getFullYear(),
 		});
+		console.log(this.state.year + '/' + (this.state.month + 1) + '/' + this.state.day + ' ' + this.state.time);
 		this.iconrec();
 	};
 
