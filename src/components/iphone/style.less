@@ -3,8 +3,6 @@
 .container { 
 	display: flex;
 	flex-direction: column;
-	//background-image: url('../../assets/backgrounds/clear-iphone.jpg');
-	//background-color: rgb(113, 25, 255) 
 	background-image: linear-gradient(rgb(14, 0, 46), rgb(93, 8, 133));;
 	color: rgb(255, 255, 255);
 	width: 414px;
@@ -13,6 +11,20 @@
 	padding-top: 80px;
 	margin: 0 auto;
 }
+.sound {
+	margin-left: 70%;
+	margin-top: -25px;
+}
+.plusMinus {
+	filter: brightness(0) invert(1);
+	margin-left: 70%;
+	margin-top: 5px;
+	margin-bottom: -25px;
+}
+
+
+
+
 .header {
 	display: flex;
 	flex-direction: column;
@@ -22,13 +34,16 @@
 .searchBox{
 	
 	width: 50%;
-	//margin-top: 175px;
-	//padding-left: 10px;
-	margin-left: 100px;
+	//margin-left: 100px;
+	margin: 0 auto;
+	//margin-bottom: 100px;
+	//position: relative;
+	margin-bottom: 40px;
+	
 	
 }
 input{
-	font-size: larger;
+	font-size: 1.5em;
 	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 	text-align: center;
 	width: 60%;
@@ -49,7 +64,7 @@ input{
 	
 
 .timeName{
-	font-size: larger;
+	font-size: 1.4em;
 	margin-top: 0;
 	margin-bottom: 0;
 }
@@ -57,27 +72,31 @@ input{
 
 
 .timesetter{
+	
 	width: 50%;
 	padding-top: 5px;
-	margin-left: 25%;
+	margin: 0 auto;
+	margin-bottom: 500px;
 
 }
 .conditions {
 	flex: 1;
-	font-size: 2em;
+	font-size: 3em;
 	color: pink;
 	text-transform: uppercase;
-	height: 10%;
-	
+	margin-bottom: 10px;
 	
 }
+
+
 .temperature {
 	flex: 2;
 	margin-top: 0;
-	font-size: 4.8em;
+	font-size: 6.8em;
 	font-weight: 300;
 	letter-spacing: -5px;
 }
+
 .filled:after {
 	content: "°";
 	margin: 0 0 0 1rem;
