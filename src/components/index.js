@@ -83,6 +83,12 @@ export default class Iphone extends Component {
 		}
 	};
 
+	voice = () => {
+		let msg = new SpeechSynthesisUtterance();
+		msg.rate=0.75;
+		msg.text = "Current weather in" + "!" + this.props.locate + "!" + "is" + "!" + this.state.cond + "!" + " with a temperature of" + "!" + Math.floor(this.state.temp) + "degree celcius";
+		speechSynthesis.speak(msg);
+    }
 	iconrec = () => {
 		var nine = [520, 521, 522, 531];
 		var ten = [500, 501, 502, 503, 504];
@@ -296,7 +302,35 @@ export default class Iphone extends Component {
 						></img>
 					) : null}
 				</div>
-				<div class={style_iphone.container}></div>
+				<div>
+					{this.state.display ? (
+						<img
+							type = "button"
+							onClick={this.voice}
+							class={style.sound}
+							width={55}
+							height={55}
+						></img>
+					):null}
+				</div>
+				<div>
+					{this.state.display ? (
+						<img
+							type = "button"
+							class={style.magnify}
+							width={25}
+							height={25}
+						></img>
+						):null}
+					{this.state.display ? (
+						<img
+							type = "button"
+							class={style.minimise}
+							width={25}
+							height={25}
+						></img>
+						):null}
+				</div>
 			</div>
 		);
 	}
@@ -324,17 +358,10 @@ export default class Iphone extends Component {
 		console.log(this.state.temp);
 		this.iconrec();
 	};
-
-	componentDidMount() {
-		if (!this.props.startupCheck) {
-			this.props.fetchCurrentLocation();
-			let input = document.getElementById("loc_input");
-			setTimeout(() => {
-				input.value ? this.fetchWeatherData(input.value) : null;
-			}, 200);
-			this.props.startupUpdate();
-		} else {
+	componentDidMount = () =>{
+		if(this.props.locate){
 			this.fetchWeatherData(this.props.locate);
 		}
 	}
+
 }
