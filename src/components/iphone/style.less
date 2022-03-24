@@ -3,7 +3,9 @@
 .container { 
 	display: flex;
 	flex-direction: column;
-	background-image: url('../../assets/backgrounds/clear-iphone.jpg');
+	//background-image: url('../../assets/backgrounds/clear-iphone.jpg');
+	//background-color: rgb(113, 25, 255) 
+	background-image: linear-gradient(rgb(14, 0, 46), rgb(93, 8, 133));;
 	color: rgb(255, 255, 255);
 	width: 414px;
 	height: 736px;
@@ -16,24 +18,65 @@
 	flex-direction: column;
 	flex: 1;
 }
-.details {
-	flex: 4;
+
+.searchBox{
+	
+	width: 50%;
+	//margin-top: 175px;
+	//padding-left: 10px;
+	margin-left: 100px;
+	
 }
-.city {
-	flex: 1;
-	font-size: 1.7em;
-	font-weight: 400;	
+input{
+	font-size: larger;
+	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+	text-align: center;
+	width: 60%;
+	background-color: transparent;
+	color: whitesmoke;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom-width: 2px;
+	border-color: rgba(255, 255, 255, 0.424) ;
+	font-weight: bold;
+		
+}
+.uparrow{
+	margin-top: 1px;
+}
+
+	
+
+.timeName{
+	font-size: larger;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+
+
+.timesetter{
+	width: 50%;
+	padding-top: 5px;
+	margin-left: 25%;
+
 }
 .conditions {
 	flex: 1;
-	font-size: 1em;
+	font-size: 2em;
+	color: pink;
+	text-transform: uppercase;
+	height: 10%;
+	
+	
 }
 .temperature {
 	flex: 2;
 	margin-top: 0;
 	font-size: 4.8em;
 	font-weight: 300;
-	letter-spacing: -12px;
+	letter-spacing: -5px;
 }
 .filled:after {
 	content: "°";
@@ -44,3 +87,51 @@
 	padding-top: 10px;
 	vertical-align: top;
 }
+
+/*
+return (
+			<div class={style.container}>
+				<div class={style.header}>
+					<div>
+						{this.state.display ?<img type = "button" onClick={this.voice} class={style.sound} width={55} height={55}></img> :null}
+					</div>
+					<div>
+						{this.state.display ?<img type = "button" class={style.magnify}	width={25} height={25}></img> :null}
+						{this.state.display ?<img type = "button" class={style.minimise} width={25}	height={25}></img> :null}
+					</div>
+					
+					
+					<span class={tempStyles}>{this.state.temp}</span>
+				</div>
+				
+				
+				<div>
+					{this.state.display ?<img type="button" onClick={bacwardDate} src='../../assets/arrows/left.png' class={ style.bacwardDate } width={30} height={63}></img>: null}	
+					{this.state.display ?<img type = "button" class = {style.weatherImage} src={this.state.link} width={225} height={225} onClick={this.props.toggleScreen}></img> : null}
+					{this.state.display ?<img type="button" onClick={forwardDate} src='../../assets/arrows/right.png' class={ style.forwardDate } width={30} height={63}></img>: null}
+													
+				</div>
+				<div class={style.conditions}>{this.state.cond}</div>
+
+				<div class={style.searchBox}>
+					<input
+						id="loc_input"
+						type="text"
+						class="search"
+						placeholder="Location"
+						onChange={getinput}
+						style="text-transform: uppercase"
+					/>
+				</div>
+
+				<div class={style.timesetter}>
+					{this.state.display ?<img type="button" onClick={uptime} src='../../assets/arrows/up.png' class={ style.uparrow } width={53} height={20}></img>: null}
+					{this.state.display ?<p class = { style.timeName }>{this.state.time} : 00</p>: null}
+					{this.state.display ?<img type="button" onClick={downtime} src='../../assets/arrows/down.png' class = {style.downarrow} width={53} height={20}></img>: null}
+					
+				</div>
+				
+				
+			</div>
+		);
+		*/ 
