@@ -29,9 +29,6 @@ export default class Iphone extends Component {
 		this.state.longitude = 0;
 		this.state.main = "";
 		this.state.link = "";
-		this.state.timezone = 0;
-		this.state.condlarger = "2em";
-		this.state.templarger = "4.8em";
 	}
 
 	// a call to fetch weather data via wunderground
@@ -86,7 +83,7 @@ export default class Iphone extends Component {
 		}
 	};
 
-	
+	calctime = () => {};
 
 	voice = () => {
 		let msg = new SpeechSynthesisUtterance();
@@ -126,28 +123,28 @@ export default class Iphone extends Component {
 		) {
 			this.setState({ link: "http://openweathermap.org/img/wn/13d@2x.png" });
 		} else if (this.state.id == 800) {
-			if (this.state.time > 18 || this.state.time < 5) {
+			if (this.state.time > 18) {
 				this.setState({ link: "http://openweathermap.org/img/wn/01n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/01d@2x.png" });
 			}
 			return link;
 		} else if (this.state.id == 801) {
-			if (this.state.time > 18 || this.state.time < 5) {
+			if (this.state.time > 18) {
 				this.setState({ link: "http://openweathermap.org/img/wn/02n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/02d@2x.png" });
 			}
 			return link;
 		} else if (this.state.id == 802) {
-			if (this.state.time > 18 || this.state.time < 5) {
+			if (this.state.time > 18) {
 				this.setState({ link: "http://openweathermap.org/img/wn/03n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/03d@2x.png" });
 			}
 			return link;
 		} else if (this.state.id == 803 || this.state.id == 804) {
-			if (this.state.time > 18 || this.state.time < 5) {
+			if (this.state.time > 18) {
 				this.setState({ link: "http://openweathermap.org/img/wn/04n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/04d@2x.png" });
@@ -175,18 +172,20 @@ export default class Iphone extends Component {
 			.then((res) => res.json())
 			.then((result) => this.coordsplit(result));
 	};
+
 	big = () => {
 		this.setState({
-			condlarger : "3em",
-			templarger : "6.8em"
+			condlarger: "3em",
+			templarger: "6.8em",
 		});
-	}
+	};
 
 	small = () => {
 		this.setState({
-			condlarger : "2em",
-			templarger : "4.8em"});
-	}
+			condlarger: "2em",
+			templarger: "4.8em",
+		});
+	};
 
 	// the main render method for the iphone component
 	render() {
@@ -204,10 +203,10 @@ export default class Iphone extends Component {
 					this.setState({ day: this.state.day + 1 });
 					this.setState({ time: 0 });
 					this.setState({ uptimer: this.state.uptimer + 1 });
-					this.forecast();
+				} else {
+					this.setState({ time: this.state.time + 1 });
+					this.setState({ uptimer: this.state.uptimer + 1 });
 				}
-				this.setState({ time: this.state.time + 1 });
-				this.setState({ uptimer: this.state.uptimer + 1 });
 				this.forecast();
 				console.log(this.state.uptimer);
 			}
@@ -221,12 +220,12 @@ export default class Iphone extends Component {
 			} else if (this.state.uptimer > 0) {
 				if (this.state.time == 0) {
 					this.setState({ day: this.state.day - 1 });
-					this.setState({ time: 24 });
+					this.setState({ time: 23 });
 					this.setState({ uptimer: this.state.uptimer - 1 });
-					this.forecast();
+				} else {
+					this.setState({ time: this.state.time - 1 });
+					this.setState({ uptimer: this.state.uptimer - 1 });
 				}
-				this.setState({ time: this.state.time - 1 });
-				this.setState({ uptimer: this.state.uptimer - 1 });
 				this.forecast();
 
 				console.log(this.state.uptimer);
@@ -249,41 +248,102 @@ export default class Iphone extends Component {
 				this.setState({ day: this.state.day - 1 });
 				this.setState({ upcount: this.state.upcount - 1 });
 				this.setState({ uptimer: this.state.uptimer - 24 });
-				this.props.DTUpdate(0);
+				this.props.DTUpdate(-1);
 				this.forecast();
 			} else if (this.state.upcount == 1) {
 				this.setState({ day: this.state.day - 1 });
 				this.setState({ upcount: this.state.upcount - 1 });
 				this.setState({ uptimer: this.state.uptimer - 24 });
-				this.props.DTUpdate(0);
+				this.props.DTUpdate(-1);
 				this.fetchWeatherData(this.props.locate);
 			}
 		};
 
-		
+		// display all weather data
 		return (
 			<div class={style.container}>
 				<div class={style.header}>
-					<div>
-						{this.state.display ?<img type = "button" onClick={this.voice} class={style.sound} width={55} height={55}></img> :null}
+					<div class={style.sound}>
+						{this.state.display ? (
+							<img
+								type="button"
+								onClick={this.voice}
+								src="../../assets/zoom and t-s/voice.png"
+								width={35}
+								height={33}
+							></img>
+						) : null}
 					</div>
-					<div>
-						{this.state.display ?<img type = "button" onClick={this.big}class={style.magnify}	width={25} height={25}></img> :null}
-						{this.state.display ?<img type = "button" onClick={this.small} class={style.minimise} width={25}	height={25}></img> :null}
+					<div class={style.plusMinus}>
+						<div>
+							{" "}
+							{this.state.display ? (
+								<img
+									type="button"
+									onClick={this.big}
+									class={style.magnify}
+									src="../../assets/zoom and t-s/plus.png"
+									width={35}
+									height={33}
+								></img>
+							) : null}
+						</div>
+						<div>
+							{this.state.display ? (
+								<img
+									type="button"
+									onClick={this.small}
+									class={style.minimise}
+									src="../../assets/zoom and t-s/minus.png"
+									width={35}
+									height={35}
+								></img>
+							) : null}
+						</div>
 					</div>
-					
-					
-					<span class={tempStyles} style={{fontSize : this.state.templarger}}>{this.state.temp}</span>
+					<span class={tempStyles} style={{ fontSize: this.state.templarger }}>
+						{this.state.temp}
+					</span>
 				</div>
-				
-				
+
 				<div>
-					{this.state.display ?<img type="button" onClick={bacwardDate} src='../../assets/arrows/left.png' class={ style.bacwardDate } width={30} height={63}></img>: null}	
-					{this.state.display ?<img type = "button" class = {style.weatherImage} src={this.state.link} width={225} height={225} onClick={this.props.toggleScreen}></img> : null}
-					{this.state.display ?<img type="button" onClick={forwardDate} src='../../assets/arrows/right.png' class={ style.forwardDate } width={30} height={63}></img>: null}
-													
+					{this.state.display ? (
+						<img
+							type="button"
+							onClick={bacwardDate}
+							src="../../assets/arrows/left.png"
+							class={style.bacwardDate}
+							width={30}
+							height={63}
+						></img>
+					) : null}
+					{this.state.display ? (
+						<img
+							type="button"
+							class={style.weatherImage}
+							src={this.state.link}
+							width={225}
+							height={225}
+							onClick={this.props.toggleScreen}
+						></img>
+					) : null}
+					{this.state.display ? (
+						<img
+							type="button"
+							onClick={forwardDate}
+							src="../../assets/arrows/right.png"
+							class={style.forwardDate}
+							width={30}
+							height={63}
+						></img>
+					) : null}
 				</div>
-				<div class={style.conditions} style={{fontSize: this.state.condlarger}}>{this.state.cond}</div>
+				<div
+					class={style.conditions}
+					style={{ fontSize: this.state.condlarger }}
+				>
+					{this.state.cond}
+				</div>
 
 				<div class={style.searchBox}>
 					<input
@@ -297,13 +357,30 @@ export default class Iphone extends Component {
 				</div>
 
 				<div class={style.timesetter}>
-					{this.state.display ?<img type="button" onClick={uptime} src='../../assets/arrows/up.png' class={ style.uparrow } width={53} height={20}></img>: null}
-					{this.state.display ?<p class = { style.timeName }>{this.state.time} : 00</p>: null}
-					{this.state.display ?<img type="button" onClick={downtime} src='../../assets/arrows/down.png' class = {style.downarrow} width={53} height={20}></img>: null}
-					
+					{this.state.display ? (
+						<img
+							type="button"
+							onClick={uptime}
+							src="../../assets/arrows/up.png"
+							class={style.uparrow}
+							width={53}
+							height={20}
+						></img>
+					) : null}
+					{this.state.display ? (
+						<p class={style.timeName}>{this.state.time} : 00</p>
+					) : null}
+					{this.state.display ? (
+						<img
+							type="button"
+							onClick={downtime}
+							src="../../assets/arrows/down.png"
+							class={style.downarrow}
+							width={53}
+							height={20}
+						></img>
+					) : null}
 				</div>
-				
-				
 			</div>
 		);
 	}
@@ -315,12 +392,11 @@ export default class Iphone extends Component {
 		var idTaken = parsed_json["weather"]["0"]["id"];
 		var main_weath = parsed_json["weather"]["0"]["main"];
 		var timez = parsed_json["timezone"];
-		
-		
+
 		this.props.updateLocation(location);
-		var unix = Math.round(+new Date()/1000);
-		var date = new Date((unix+timez)*1000);
-		
+		var unix = Math.round(+new Date() / 1000);
+		var date = new Date((unix + timez) * 1000);
+
 		this.setState({
 			temp: temp_c.toFixed(),
 			cond: conditions,
@@ -331,13 +407,23 @@ export default class Iphone extends Component {
 			month: new Date(date).getMonth(),
 			year: new Date(date).getFullYear(),
 		});
-		
+
+		this.props.DTUpdate("reset");
+
+		console.log(
+			this.state.year +
+				"/" +
+				(this.state.month + 1) +
+				"/" +
+				this.state.day +
+				" " +
+				this.state.time
+		);
 		this.iconrec();
 	};
 
 	componentDidMount() {
 		if (this.props.locate) {
-			this.props.DTUpdate(0);
 			this.fetchWeatherData(this.props.locate);
 		}
 	}
