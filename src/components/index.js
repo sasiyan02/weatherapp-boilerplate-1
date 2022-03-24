@@ -84,9 +84,7 @@ export default class Iphone extends Component {
 		}
 	};
 
-	calctime = () =>{
-
-	}
+	calctime = () => {};
 
 	voice = () => {
 		let msg = new SpeechSynthesisUtterance();
@@ -227,7 +225,7 @@ export default class Iphone extends Component {
 				this.setState({ day: this.state.day + 1 });
 				this.setState({ upcount: this.state.upcount + 1 });
 				this.setState({ uptimer: this.state.uptimer + 24 });
-				this.props.DTUpdate(1);
+				this.DTchange(1, this.state.timez / 3600);
 				this.forecast();
 			}
 		};
@@ -237,13 +235,13 @@ export default class Iphone extends Component {
 				this.setState({ day: this.state.day - 1 });
 				this.setState({ upcount: this.state.upcount - 1 });
 				this.setState({ uptimer: this.state.uptimer - 24 });
-				this.props.DTUpdate(0);
+				this.DTchange(-1, this.state.timez / 3600);
 				this.forecast();
 			} else if (this.state.upcount == 1) {
 				this.setState({ day: this.state.day - 1 });
 				this.setState({ upcount: this.state.upcount - 1 });
 				this.setState({ uptimer: this.state.uptimer - 24 });
-				this.props.DTUpdate(0);
+				this.DTchange(-1, this.state.timez / 3600);
 				this.fetchWeatherData(this.props.locate);
 			}
 		};
@@ -356,6 +354,20 @@ export default class Iphone extends Component {
 		);
 	}
 
+	DTchange = (change, tChange) => {
+		var dateCurrent =
+			String(this.state.year) +
+			"-" +
+			String(this.state.month + 1) +
+			"-" +
+			String(this.state.day + change) +
+			" " +
+			(12 - tChange) +
+			":00:00";
+		var newDT = new Date(dateCurrent);
+		this.props.DTUpdate(newDT / 1000);
+	};
+
 	parseResponse = (parsed_json) => {
 		var location = parsed_json["name"];
 		var temp_c = parsed_json["main"]["temp"];
@@ -363,15 +375,13 @@ export default class Iphone extends Component {
 		var idTaken = parsed_json["weather"]["0"]["id"];
 		var main_weath = parsed_json["weather"]["0"]["main"];
 		var timez = parsed_json["timezone"];
-		
-		console.log(unix);
+
 		this.props.updateLocation(location);
-		console.log(parsed_json);
-		var unix = Math.round(+new Date()/1000);
-		console.log(unix);
-		var date = new Date((unix+timez)*1000);
-		
+		var unix = Math.round(+new Date() / 1000);
+		var date = new Date((unix + timez) * 1000);
+
 		this.setState({
+			timez: timez,
 			temp: temp_c.toFixed(),
 			cond: conditions,
 			id: idTaken,
@@ -381,13 +391,23 @@ export default class Iphone extends Component {
 			month: new Date(date).getMonth(),
 			year: new Date(date).getFullYear(),
 		});
-		console.log(this.state.year + '/' + (this.state.month + 1) + '/' + this.state.day + ' ' + this.state.time);
+
+		this.DTchange(0, this.state.timez / 3600);
+
+		console.log(
+			this.state.year +
+				"/" +
+				(this.state.month + 1) +
+				"/" +
+				this.state.day +
+				" " +
+				this.state.time
+		);
 		this.iconrec();
 	};
 
 	componentDidMount() {
 		if (this.props.locate) {
-			this.props.DTUpdate(0);
 			this.fetchWeatherData(this.props.locate);
 		}
 	}
