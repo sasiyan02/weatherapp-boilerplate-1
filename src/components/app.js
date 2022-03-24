@@ -13,7 +13,7 @@ export default class App extends Component {
 		childVis: false,
 		startupComplete: false,
 		locate: "",
-		dayChange: 0,
+		dt: "",
 	};
 	//var App = React.createClass({
 
@@ -56,7 +56,7 @@ export default class App extends Component {
 							locate={this.state.locate}
 							toggleScreen={this.toggleChild}
 							API_Key={this.state.API_Key}
-							changeDay={this.state.dayChange}
+							dt={this.state.dt}
 						/>
 					) : (
 						<Iphone
@@ -75,9 +75,9 @@ export default class App extends Component {
 									locate: location,
 								});
 							}}
-							DTUpdate={(change) => {
+							DTUpdate={(dt) => {
 								this.setState({
-									dayChange: change,
+									dt: dt,
 								});
 							}}
 						/>
