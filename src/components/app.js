@@ -9,11 +9,11 @@ import $ from "jquery";
 
 export default class App extends Component {
 	state = {
-		API_Key: "990d4575585b853119bef3936de82611",
+		API_Key: "a0fc459adad52f03a23991ac301ce7c4",
 		childVis: false,
 		startupComplete: false,
 		locate: "",
-		dt: "",
+		day: 0,
 	};
 	//var App = React.createClass({
 
@@ -37,6 +37,18 @@ export default class App extends Component {
 		});
 	};
 
+	UpdateDay = (day) => {
+		let change;
+		if (typeof day === "string") {
+			change = 0;
+		} else {
+			change = this.state.day + day;
+		}
+		this.setState({
+			day: change,
+		});
+	};
+
 	/*
 		A render method to display the required Component on screen (iPhone or iPad) : selected by checking component's isTablet state
 	*/
@@ -56,7 +68,7 @@ export default class App extends Component {
 							locate={this.state.locate}
 							toggleScreen={this.toggleChild}
 							API_Key={this.state.API_Key}
-							dt={this.state.dt}
+							day={this.state.day}
 						/>
 					) : (
 						<Iphone
@@ -75,11 +87,7 @@ export default class App extends Component {
 									locate: location,
 								});
 							}}
-							DTUpdate={(dt) => {
-								this.setState({
-									dt: dt,
-								});
-							}}
+							DTUpdate={this.UpdateDay}
 						/>
 					)}
 				</div>
