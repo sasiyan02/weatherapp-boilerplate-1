@@ -18,17 +18,16 @@ export default class ExpIphone extends Component {
 		// temperature state
 		this.state.temp = "";
 		// button display state
-		this.setState({ time: new Date().getHours(), locate: this.props.locate });
+		this.setState({ locate: this.props.locate });
 	}
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = (location) => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = `http://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&APPID=${this.props.API_Key}`;
 		$.ajax({
-			url: url,
+			url: `http://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&APPID=${this.props.API_Key}`,
 			dataType: "jsonp",
-			success: this.parseResponse,
+			success: this.parseGeoCoords,
 			error: function (req, err) {
 				console.log("API call failed " + err);
 			},
@@ -37,6 +36,17 @@ export default class ExpIphone extends Component {
 		this.setState({ display: false });
 	};
 	//forecast = ()
+
+	fetchWeather = () => {
+		$.ajax({
+			url: `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.lat}&lon=${this.state.lon}&units=metric&appid=${this.props.API_Key}`,
+			dataType: "jsonp",
+			success: this.parseResponse,
+			error: function (req, err) {
+				console.log("API call failed " + err);
+			},
+		});
+	};
 
 	// the main render method for the iphone component
 	render() {
@@ -70,25 +80,60 @@ export default class ExpIphone extends Component {
 		);
 	}
 
-	parseResponse = (parsed_json) => {
+	parseGeoCoords = (parsed_json) => {
 		var location = parsed_json["name"];
-		var temp_c = parsed_json["main"]["temp"];
-		var temp_min = parsed_json["main"]["temp_min"];
-		var temp_max = parsed_json["main"]["temp_max"];
-		var pressure = parsed_json["main"]["pressure"];
-		var humidity = parsed_json["main"]["humidity"];
-		var c_coverage = parsed_json["clouds"]["all"];
-		var w_speed = parsed_json["wind"]["speed"];
-		var w_deg = parsed_json["wind"]["deg"];
+		var lon = parsed_json["coord"]["lon"];
+		var lat = parsed_json["coord"]["lat"];
+
+		console.log(parsed_json);
+
+		this.setState({
+			locate: location,
+			lon: lon,
+			lat: lat,
+		});
+
+		this.fetchWeather();
+	};
+
+	parseResponse = (parsed_json) => {
+		let daily = parsed_json["daily"];
+		let count = daily.length;
+		console.log(daily);
+
+		var day = new Date().getDate();
+		var month = new Date().getMonth();
+		var year = new Date().getFullYear();
+
+		var datelong =
+			String(year) +
+			"-" +
+			String(month + 1) +
+			"-" +
+			String(day + this.props.changeDay) +
+			" 12:00:00";
+
+		var d = new Date(datelong);
+		var num = d / 1000;
+
+		for (let i = 0; i < count; i++) {
+			if (daily[i]["dt"] == num) {
+				var temp_c = daily[i]["temp"]["day"];
+				var temp_min = daily[i]["temp"]["min"];
+				var temp_max = daily[i]["temp"]["max"];
+				var pressure = daily[i]["pressure"];
+				var humidity = daily[i]["humidity"];
+				var c_coverage = daily[i]["clouds"];
+				var w_speed = daily[i]["wind_speed"];
+				var w_deg = daily[i]["wind_deg"];
+			}
+		}
 
 		let w_direction = this.fetchCompass(w_deg);
-
-		console.log(w_deg + "," + w_direction);
 
 		console.log(parsed_json);
 		// set states for fields so they could be rendered later on
 		this.setState({
-			locate: location,
 			temp: temp_c.toFixed(),
 			temp_min: temp_min,
 			temp_max: temp_max,
