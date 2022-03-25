@@ -8,14 +8,19 @@ import Ipad from "./ipad";
 import $ from "jquery";
 
 export default class App extends Component {
+	//var App = React.createClass({
+
+	//Assign states to fields which will be utilized later on
 	state = {
+		//API key state utilized in api calls to retrieve weather data
 		API_Key: "a0fc459adad52f03a23991ac301ce7c4",
+		//page display state
 		childVis: false,
-		startupComplete: false,
+		//location state
 		locate: "",
+		//day change state
 		day: 0,
 	};
-	//var App = React.createClass({
 
 	// once the components are loaded, checks if the url bar has a path with "ipad" in it, if so sets state of tablet to be true
 	componentDidMount() {
@@ -31,12 +36,14 @@ export default class App extends Component {
 		}
 	}
 
+	// set the state which will be used later on, in which page should be rendered
 	toggleChild = () => {
 		this.setState({
 			childVis: !this.state.childVis,
 		});
 	};
 
+	// set the state for the difference in days from current day
 	UpdateDay = (day) => {
 		let change;
 		if (typeof day === "string") {
@@ -53,7 +60,6 @@ export default class App extends Component {
 		A render method to display the required Component on screen (iPhone or iPad) : selected by checking component's isTablet state
 	*/
 	render() {
-		//this.fetchCurrentLocation();
 		if (this.state.isTablet) {
 			return (
 				<div id="app">
@@ -63,6 +69,10 @@ export default class App extends Component {
 		} else {
 			return (
 				<div id="app">
+					{
+						// conditional operator which determines which page should be loaded
+						// state components passed on to external pages to be used later on
+					}
 					{this.state.childVis ? (
 						<ExpIphone
 							locate={this.state.locate}
@@ -75,13 +85,6 @@ export default class App extends Component {
 							locate={this.state.locate}
 							toggleScreen={this.toggleChild}
 							API_Key={this.state.API_Key}
-							startupCheck={this.state.startupComplete}
-							startupUpdate={() => {
-								this.setState({
-									startupComplete: !this.state.startupComplete,
-								});
-							}}
-							fetchCurrentLocation={this.fetchCurrentLocation}
 							updateLocation={(location) => {
 								this.setState({
 									locate: location,
