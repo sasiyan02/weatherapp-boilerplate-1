@@ -19,15 +19,25 @@ export default class Iphone extends Component {
 		this.state.temp = "";
 		// button display state
 		this.state.id = "";
+		//current time state
 		this.state.time = new Date().getHours();
+		//current day state
 		this.state.day = new Date().getDate();
+		//current month state
 		this.state.month = new Date().getMonth();
+		//current year state
 		this.state.year = new Date().getFullYear();
+		//hour change state
 		this.state.uptimer = 0;
+		//time distance from current state
 		this.state.upcount = 0;
+		//location latitude state
 		this.state.latitude = 0;
+		//location longitude state
 		this.state.longitude = 0;
+		//weather description state
 		this.state.main = "";
+		//link to api calls state
 		this.state.link = "";
 	}
 
@@ -46,6 +56,8 @@ export default class Iphone extends Component {
 		this.setState({ display: true });
 		// once the data grabbed, hide the button
 	};
+
+	//get weather data by given date&time
 	find = (data) => {
 		var hourly = data["hourly"];
 
@@ -64,6 +76,7 @@ export default class Iphone extends Component {
 		var num = d / 1000;
 		var count = Object.keys(hourly).length;
 
+		// go through api output and fetch required data
 		for (let i = 0; i < count; i++) {
 			if (hourly[i]["dt"] == num) {
 				var temp_c = hourly[i]["temp"];
@@ -71,6 +84,7 @@ export default class Iphone extends Component {
 				var idTaken = hourly[i]["weather"][0]["id"];
 				var main_weath = hourly[i]["weather"][0]["main"];
 
+				// set states for fields so they could be rendered later on
 				this.setState({
 					temp: temp_c.toFixed(),
 					cond: conditions,
@@ -83,8 +97,7 @@ export default class Iphone extends Component {
 		}
 	};
 
-	calctime = () => {};
-
+	//Returns a audio output of current weather
 	voice = () => {
 		let msg = new SpeechSynthesisUtterance();
 		msg.rate = 0.75;
@@ -104,7 +117,9 @@ export default class Iphone extends Component {
 		speechSynthesis.speak(msg);
 	};
 
+	//gets the weather condition icon from the api
 	iconrec = () => {
+		//icon sets, seperated by: nine, ten, fifty
 		var nine = [520, 521, 522, 531];
 		var ten = [500, 501, 502, 503, 504];
 		var fifty = [701, 711, 721, 731, 741, 751, 761, 762, 771, 781];
@@ -116,12 +131,11 @@ export default class Iphone extends Component {
 		} else if (fifty.includes(this.state.id)) {
 			this.setState({ link: "http://openweathermap.org/img/wn/50d@2x.png" });
 		} else if (ten.includes(this.state.id)) {
-			if(this.state.time > 18 || this.state.time < 6){
+			if (this.state.time > 18 || this.state.time < 6) {
 				this.setState({ link: "http://openweathermap.org/img/wn/10n@2x.png" });
-			}else{
+			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/10d@2x.png" });
 			}
-			
 		} else if (
 			this.state.main == "Snow" ||
 			this.state.cond == "freezing rain"
@@ -133,21 +147,18 @@ export default class Iphone extends Component {
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/01d@2x.png" });
 			}
-			
 		} else if (this.state.id == 801) {
 			if (this.state.time > 18 || this.state.time < 6) {
 				this.setState({ link: "http://openweathermap.org/img/wn/02n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/02d@2x.png" });
 			}
-			
 		} else if (this.state.id == 802) {
 			if (this.state.time > 18 || this.state.time < 6) {
 				this.setState({ link: "http://openweathermap.org/img/wn/03n@2x.png" });
 			} else {
 				this.setState({ link: "http://openweathermap.org/img/wn/03d@2x.png" });
 			}
-			
 		} else if (this.state.id == 803 || this.state.id == 804) {
 			if (this.state.time > 18 || this.state.time < 6) {
 				this.setState({ link: "http://openweathermap.org/img/wn/04n@2x.png" });
@@ -157,6 +168,7 @@ export default class Iphone extends Component {
 		}
 	};
 
+	// a call to fetch the location longitude and latitude via wunderground
 	coordsplit = (result) => {
 		var lats = result[0]["lat"];
 		var long = result[0]["lon"];
@@ -170,6 +182,7 @@ export default class Iphone extends Component {
 			.then((data) => this.find(data));
 	};
 
+	// a call to fetch weather data by given date&time
 	forecast = () => {
 		fetch(
 			`http://api.openweathermap.org/geo/1.0/direct?q=${this.props.locate}&limit=5&appid=${this.props.API_Key}`
@@ -178,16 +191,20 @@ export default class Iphone extends Component {
 			.then((result) => this.coordsplit(result));
 	};
 
+	// changes css style to enlarge the text
 	big = () => {
+		// set states for fields so they could be rendered later on
 		this.setState({
-			condlarger: "3em",
+			condlarger: "2em",
 			templarger: "6.8em",
 		});
 	};
 
+	// changes css style to decrease the text
 	small = () => {
+		// set states for fields so they could be rendered later on
 		this.setState({
-			condlarger: "2em",
+			condlarger: "1.5em",
 			templarger: "4.8em",
 		});
 	};
@@ -202,6 +219,8 @@ export default class Iphone extends Component {
 			const loc = event.target.value;
 			this.fetchWeatherData(loc);
 		};
+
+		// Increase the time by 1 hour and fetch weather data
 		const uptime = () => {
 			if (this.state.uptimer < 48) {
 				if (this.state.time == 23) {
@@ -213,10 +232,10 @@ export default class Iphone extends Component {
 					this.setState({ uptimer: this.state.uptimer + 1 });
 				}
 				this.forecast();
-				console.log(this.state.uptimer);
 			}
 		};
 
+		// Decrease the time by 1 hour and fetch weather data
 		const downtime = () => {
 			if (this.state.uptimer == 1) {
 				this.setState({ time: this.state.time - 1 });
@@ -232,13 +251,11 @@ export default class Iphone extends Component {
 					this.setState({ uptimer: this.state.uptimer - 1 });
 				}
 				this.forecast();
-
-				console.log(this.state.uptimer);
 			}
 		};
 
+		// Change the day to the next day and fetch weather data
 		const forwardDate = () => {
-			console.log(this.state.upcount);
 			if (this.state.upcount < 1) {
 				this.setState({ day: this.state.day + 1 });
 				this.setState({ upcount: this.state.upcount + 1 });
@@ -248,6 +265,7 @@ export default class Iphone extends Component {
 			}
 		};
 
+		// Change the day to the previous day and fetch weather data
 		const bacwardDate = () => {
 			if (this.state.upcount > 1) {
 				this.setState({ day: this.state.day - 1 });
@@ -390,6 +408,7 @@ export default class Iphone extends Component {
 		);
 	}
 
+	//retrieves weather data from api call
 	parseResponse = (parsed_json) => {
 		var location = parsed_json["name"];
 		var temp_c = parsed_json["main"]["temp"];
@@ -402,6 +421,7 @@ export default class Iphone extends Component {
 		var unix = Math.round(+new Date() / 1000);
 		var date = new Date((unix + timez) * 1000);
 
+		// set states for fields so they could be rendered later on
 		this.setState({
 			temp: temp_c.toFixed(),
 			cond: conditions,
@@ -411,24 +431,15 @@ export default class Iphone extends Component {
 			day: new Date(date).getDate(),
 			month: new Date(date).getMonth(),
 			year: new Date(date).getFullYear(),
-			uptimer : 0,
-			upcount : 0
+			uptimer: 0,
+			upcount: 0,
 		});
-		console.log(this.state.id);
-		this.props.DTUpdate("reset");
 
-		console.log(
-			this.state.year +
-				"/" +
-				(this.state.month + 1) +
-				"/" +
-				this.state.day +
-				" " +
-				this.state.time
-		);
+		this.props.DTUpdate("reset");
 		this.iconrec();
 	};
 
+	// Fetch weather data after loading up the page
 	componentDidMount() {
 		if (this.props.locate) {
 			this.fetchWeatherData(this.props.locate);
