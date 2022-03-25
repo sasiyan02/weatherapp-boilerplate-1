@@ -23,7 +23,7 @@ export default class ExpIphone extends Component {
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = (location) => {
-		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
+		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/units/city.json
 		$.ajax({
 			url: `http://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&APPID=${this.props.API_Key}`,
 			dataType: "jsonp",
@@ -32,12 +32,11 @@ export default class ExpIphone extends Component {
 				console.log("API call failed " + err);
 			},
 		});
-		// once the data grabbed, hide the button
-		this.setState({ display: false });
 	};
-	//forecast = ()
 
+	// a call to fetch specific weather data via wunderground
 	fetchWeather = () => {
+		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/lat/lon/units/city.json
 		$.ajax({
 			url: `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.lat}&lon=${this.state.lon}&units=metric&appid=${this.props.API_Key}`,
 			dataType: "jsonp",
@@ -48,13 +47,14 @@ export default class ExpIphone extends Component {
 		});
 	};
 
-	// the main render method for the iphone component
+	// the main render method for the extended iphone page component
 	render() {
+		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp
 			? `${style.temperature} ${style.filled}`
 			: style.temperature;
 
-		// display all weather data
+		// display detailed weather data
 		return (
 			<div class={style.container}>
 				<div class={style.header}>
@@ -80,11 +80,13 @@ export default class ExpIphone extends Component {
 		);
 	}
 
+	//retrieves location coordinates from api call
 	parseGeoCoords = (parsed_json) => {
 		var location = parsed_json["name"];
 		var lon = parsed_json["coord"]["lon"];
 		var lat = parsed_json["coord"]["lat"];
 
+		// set states for fields so they could be utilized in api call later on
 		this.setState({
 			locate: location,
 			lon: lon,
@@ -94,9 +96,9 @@ export default class ExpIphone extends Component {
 		this.fetchWeather();
 	};
 
+	//retrieves weather data from api call
 	parseResponse = (parsed_json) => {
 		let daily = parsed_json["daily"];
-		console.log(daily);
 
 		var i = this.props.day;
 
@@ -110,6 +112,7 @@ export default class ExpIphone extends Component {
 		var w_deg = daily[i]["wind_deg"];
 
 		let w_direction = this.fetchCompass(w_deg);
+
 		// set states for fields so they could be rendered later on
 		this.setState({
 			temp: temp_c.toFixed(),
@@ -123,6 +126,7 @@ export default class ExpIphone extends Component {
 		});
 	};
 
+	// convert angle degrees into compass direction
 	fetchCompass(deg) {
 		if (deg < 22.5 || deg >= 337.5) {
 			return "North";
@@ -143,6 +147,7 @@ export default class ExpIphone extends Component {
 		}
 	}
 
+	// Retrieve weather data after page load
 	componentDidMount() {
 		this.fetchWeatherData(this.state.locate);
 	}

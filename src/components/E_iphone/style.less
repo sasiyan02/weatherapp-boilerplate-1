@@ -1,9 +1,9 @@
 @import "~style/helpers";
 
 .container {
+	position: relative;
 	display: flex;
 	flex-direction: column;
-	background-image: url("../../assets/backgrounds/clear-iphone.jpg");
 	color: #fff;
 	width: 414px;
 	height: 736px;
@@ -11,11 +11,29 @@
 	padding-top: 80px;
 	margin: 0 auto;
 }
+
+.container:before {
+	content: "";
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	background-image: linear-gradient(rgb(14, 0, 46), rgb(93, 8, 133));
+	opacity: 0.9;
+}
+
 .header {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	flex: 1;
+	opacity: 1;
+	color: #f0ffff;
+	font-weight: bold;
+	font-family: "Lato", sans-serif;
 }
+
 .details {
 	flex: 4;
 }
@@ -33,10 +51,11 @@
 	margin-top: 0;
 	font-size: 4.8em;
 	font-weight: 300;
-	letter-spacing: -12px;
+	letter-spacing: -3px;
 }
 .filled:after {
 	content: "°";
+
 	margin: 0 0 0 1rem;
 	font-size: 0.5em;
 	font-weight: 100;
@@ -46,6 +65,7 @@
 }
 .degSign:after {
 	content: "°";
+
 	margin: 0 0 0 0.3rem;
 	font-size: 1em;
 	font-weight: 100;
